@@ -9,13 +9,21 @@ extern float anguloMercurio;
 extern float anguloTerra;
 extern float anguloLua;
 extern float anguloMarte;
+extern float anguloJupiter;
+extern float anguloSaturno;
+extern float anguloUrano;
+extern float anguloNetuno;
 
-// Funções para desenhar os planetas
+// Funcoes
 void desenhaSol();
 void desenhaMercurio();
 void desenhaVenus();
 void desenhaTerra();
 void desenhaLua();
 void desenhaMarte();
+void desenhaJupiter();
+void desenhaSaturno();
+void desenhaUrano();
+void desenhaNetuno();
 
-#endif
+#endif // PLANETAS_H

@@ -1,19 +1,79 @@
 #include "../include/Sistema_Solar.h"
 
-// Variaveis globais
+// Variáveis globais
 float eyex = 0;
 float eyey = 60;
 float eyez = 120;
+float zoomSpeed = 10.0f; // Velocidade do zoom
+float anguloRotacao = 0.0f; // Ângulo de rotação ao redor do eixo Y
+float rotacaoSpeed = 0.1f; // Velocidade da rotação
+
+void mouseFunc(int button, int state, int x, int y) {
+    static int lastY = 0; // Última posição Y do mouse para detectar rotação
+
+    if (state == GLUT_DOWN) {
+        if (button == 3) { // Scroll up
+            eyez -= zoomSpeed; // Zoom in
+        } else if (button == 4) { // Scroll down
+            eyez += zoomSpeed; // Zoom out
+        }
+        glutPostRedisplay();
+    }
+    
+    if (button == GLUT_MIDDLE_BUTTON) {
+        int deltaY = y - lastY; // Calcula a diferença do movimento do mouse
+        anguloRotacao += deltaY * rotacaoSpeed; // Atualiza o ângulo de rotação
+        lastY = y; // Atualiza a posição Y do mouse
+        glutPostRedisplay();
+    }
+}
+
+void keyboardFunc(int key, int x, int y) {
+    if (key == GLUT_KEY_LEFT) {
+        anguloRotacao -= rotacaoSpeed; // Rotaciona para a esquerda
+    } else if (key == GLUT_KEY_RIGHT) {
+        anguloRotacao += rotacaoSpeed; // Rotaciona para a direita
+    }
+    glutPostRedisplay();
+}
+
 
 void desenha(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(eyex, eyey, eyez, 0, 0, 0, 0, 1, 0);
+
+    // Aplica a rotação e zoom
+    gluLookAt(eyex * cos(anguloRotacao) - eyez * sin(anguloRotacao), eyey, eyex * sin(anguloRotacao) + eyez * cos(anguloRotacao), 
+              0, 0, 0, 0, 1, 0);
 
     // Desenha o sistema planetário
     glPushMatrix();
         desenhaSol();
+
+        glPushMatrix();
+            glRotatef(anguloNetuno, 0, 1, 0);
+            glTranslatef(130, 0, 0);
+            desenhaNetuno();
+        glPopMatrix();
+
+        glPushMatrix();
+            glRotatef(anguloUrano, 0, 1, 0);
+            glTranslatef(115, 0, 0);
+            desenhaUrano();
+        glPopMatrix();
+
+        glPushMatrix();
+            glRotatef(anguloSaturno, 0, 1, 0);
+            glTranslated(100, 0, 0);
+            desenhaSaturno();
+        glPopMatrix();
+
+        glPushMatrix();
+            glRotatef(anguloJupiter, 0, 1, 0);
+            glTranslated(85, 0, 0);
+            desenhaJupiter();
+        glPopMatrix();
 
         glPushMatrix();
             glRotatef(anguloMarte, 0, 1, 0);
@@ -50,31 +110,43 @@ void desenha(void) {
 }
 
 void TimerFunction(int value) {
-    anguloTerra += 3;
+    anguloTerra += 360.0 / 365;    // Ajuste para refletir uma órbita completa em 365 "segundos"
     if (anguloTerra >= 360) anguloTerra = 0;
-    
-    anguloLua += 6;
+
+    anguloLua += (360.0 / 27.3);    // Ajuste para refletir uma órbita completa em 27,3 "segundos"
     if (anguloLua >= 360) anguloLua = 0;
-    
-    anguloMarte += 2;
+
+    anguloMarte += 360.0 / 687;     // Ajuste para refletir uma órbita completa em 687 "segundos"
     if (anguloMarte >= 360) anguloMarte = 0;
 
-    anguloMercurio += 1;
+    anguloMercurio += 360.0 / 88;   // Ajuste para refletir uma órbita completa em 88 "segundos"
     if (anguloMercurio >= 360) anguloMercurio = 0;
 
-    anguloVenus += 1.25;
+    anguloVenus += 360.0 / 225;     // Ajuste para refletir uma órbita completa em 225 "segundos"
     if (anguloVenus >= 360) anguloVenus = 0;
 
+    anguloJupiter += 360.0 / 4333;  // Ajuste para refletir uma órbita completa em 4333 "segundos"
+    if (anguloJupiter >= 360) anguloJupiter = 0;
+
+    anguloSaturno += 360.0 / 10759; // Ajuste para refletir uma órbita completa em 10759 "segundos"
+    if (anguloSaturno >= 360) anguloSaturno = 0;
+
+    anguloUrano += 360.0 / 30660;   // Ajuste para refletir uma órbita completa em 30660 "segundos"
+    if (anguloUrano >= 360) anguloUrano = 0;
+
+    anguloNetuno += 360.0 / 60180;  // Ajuste para refletir uma órbita completa em 60180 "segundos"
+    if (anguloNetuno >= 360) anguloNetuno = 0;
+
     glutPostRedisplay();
-    glutTimerFunc(33, TimerFunction, 1);
+    glutTimerFunc(33, TimerFunction, 1); // Ajuste o intervalo conforme necessário
 }
 
 void definirIluminacao() {
     // Parâmetros da luz
-    GLfloat luzAmbiente[] = {0.2f, 0.2f, 0.2f, 1.0f};
-    GLfloat luzDifusa[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat luzEspecular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat posicaoLuz[] = {0.0f, 0.0f, 100.0f, 1.0f};
+    GLfloat luzAmbiente[] = {0.3f, 0.3f, 0.3f, 1.0f}; // Cor da luz ambiente
+    GLfloat luzDifusa[] = {0.6f, 0.6f, 0.6f, 1.0f};   // Luz difusa que espalha em todas as direções
+    GLfloat luzEspecular[] = {0.1f, 0.1f, 0.1f, 0.1f}; // Simula o brilho
+    GLfloat posicaoLuz[] = {0.0f, 0.0f, 100.0f, 1.0f}; // Posição da luz
 
     glEnable(GL_LIGHTING); 
     glEnable(GL_LIGHT0);
@@ -97,8 +169,11 @@ void definirIluminacao() {
 void Inicializa() {
     glClearColor(0, 0, 0, 1);
     glMatrixMode(GL_PROJECTION);
-    gluPerspective(50, 1, 1, 500);
+    gluPerspective(100, 1, 1, 500);
     glEnable(GL_DEPTH_TEST);
 
-    //definirIluminacao();
+    definirIluminacao();
+    glutMouseFunc(mouseFunc); // Registra a função de callback do mouse
+    glutSpecialFunc(keyboardFunc); // Registra a função de callback do teclado para teclas especiais
 }
+

@@ -24,7 +24,7 @@ all: $(TARGET)
 
 # Regra para compilar o executável
 $(TARGET): $(OBJECTS) | $(BINDIR)
-	$(CC) $(OBJECTS) -o $(TARGET) -lGL -lGLU -lglut
+	$(CC) $(OBJECTS) -o $(TARGET) -lGL -lGLU -lglut -lm
 
 # Regra para compilar arquivos .c em .o
 $(OBJDIR)/%.o: $(SRCDIR)/%.c $(INCDIR)/Sistema_Solar.h | $(OBJDIR)
