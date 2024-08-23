@@ -13,6 +13,9 @@
 *.gch
 *.pch
 
+#vcode
+.vscode
+
 # Libraries
 *.lib
 *.a
