@@ -10,12 +10,6 @@ extern float eyey;
 extern float eyez;
 
 // Declarações de funções
-void desenhaSol();
-void desenhaMercurio();
-void desenhaVenus();
-void desenhaTerra();
-void desenhaLua();
-void desenhaMarte();
 void desenha();
 void TimerFunction(int value);
 void definirIluminacao();
