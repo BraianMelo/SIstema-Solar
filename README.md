@@ -37,6 +37,15 @@ Após a compilação, você pode executar o programa com o seguinte comando:
 ./bin/Sistema_Solar.elf
 ```
 
+## Comandos
+O programa recebe comandos das seguintes teclas:
+* **F1**: aumenta a velocidade da simulação.
+* **F2**: diminui a velocidade da simulação.
+* **UP** ou **ZOOM IN** (Roda do mouse): aumenta o zoom em relação ao sol.
+* **DOWN** ou **ZOOM OUT** (Roda do mouse): diminui o zoom em relação ao sol.
+* **LEFT**: rotaciona pela esquerda ao redor do sol.
+* **RIGHT**: rotaciona pela direita ao redor do sol.
+
 ## Dono do Projeto
 O projeto foi criado e desenvolvido por:
 * **BraianMelo** (GitHub). Caso queira visitar meu perfil ou ver outros projetos, *[clique aqui](https://github.com/BraianMelo)*.

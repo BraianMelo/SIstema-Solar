@@ -10,9 +10,10 @@ extern float eyex;
 extern float eyey;
 extern float eyez;
 
-extern float zoomSpeed; 
+extern float velocidadeZoom; 
 extern float anguloRotacao; 
-extern float rotacaoSpeed;
+extern float velocidadeRotacao;
+extern float multVelocidade;
 
 // Declarações de funções
 void desenha();

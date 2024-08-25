@@ -4,25 +4,26 @@
 float eyex = 0;
 float eyey = 60;
 float eyez = 120;
-float zoomSpeed = 10.0f; // Velocidade do zoom
+float velocidadeZoom = 10.0f; // Velocidade do zoom
 float anguloRotacao = 0.0f; // Ângulo de rotação ao redor do eixo Y
-float rotacaoSpeed = 0.1f; // Velocidade da rotação
+float velocidadeRotacao = 0.05f; // Velocidade da rotação
+float multVelocidade = 1.0f;
 
 void mouseFunc(int button, int state, int x, int y) {
     static int lastY = 0; // Última posição Y do mouse para detectar rotação
 
     if (state == GLUT_DOWN) {
         if (button == 3) { // Scroll up
-            eyez -= zoomSpeed; // Zoom in
+            eyez -= velocidadeZoom; // Zoom in
         } else if (button == 4) { // Scroll down
-            eyez += zoomSpeed; // Zoom out
+            eyez += velocidadeZoom; // Zoom out
         }
         glutPostRedisplay();
     }
     
     if (button == GLUT_MIDDLE_BUTTON) {
         int deltaY = y - lastY; // Calcula a diferença do movimento do mouse
-        anguloRotacao += deltaY * rotacaoSpeed; // Atualiza o ângulo de rotação
+        anguloRotacao += deltaY * velocidadeRotacao; // Atualiza o ângulo de rotação
         lastY = y; // Atualiza a posição Y do mouse
         glutPostRedisplay();
     }
@@ -30,9 +31,19 @@ void mouseFunc(int button, int state, int x, int y) {
 
 void keyboardFunc(int key, int x, int y) {
     if (key == GLUT_KEY_LEFT) {
-        anguloRotacao -= rotacaoSpeed; // Rotaciona para a esquerda
+        anguloRotacao -= velocidadeRotacao; // Rotaciona para a esquerda
     } else if (key == GLUT_KEY_RIGHT) {
-        anguloRotacao += rotacaoSpeed; // Rotaciona para a direita
+        anguloRotacao += velocidadeRotacao; // Rotaciona para a direita
+    } else if (key == GLUT_KEY_UP) {
+        eyez -= velocidadeZoom;
+    } else if (key == GLUT_KEY_DOWN) {
+        eyez += velocidadeZoom;
+    } else if (key == GLUT_KEY_F1) {
+        if (multVelocidade <= 32.0f)
+            multVelocidade *= 2;
+    } else if (key == GLUT_KEY_F2) {
+        if (multVelocidade >= 0.25f)
+            multVelocidade /= 2;
     }
     glutPostRedisplay();
 }
@@ -110,35 +121,35 @@ void desenha(void) {
 }
 
 void TimerFunction(int value) {
-    anguloTerra += 360.0 / 365;    // Ajuste para refletir uma órbita completa em 365 "segundos"
+    anguloTerra += 0.9863 * multVelocidade;  // 360 / 365
     if (anguloTerra >= 360) anguloTerra = 0;
 
-    anguloLua += (360.0 / 27.3);    // Ajuste para refletir uma órbita completa em 27,3 "segundos"
+    anguloLua += 3.1867 * multVelocidade; // 360 / 273
     if (anguloLua >= 360) anguloLua = 0;
 
-    anguloMarte += 360.0 / 687;     // Ajuste para refletir uma órbita completa em 687 "segundos"
+    anguloMarte += 0.5240 * multVelocidade;  // 360 / 687  
     if (anguloMarte >= 360) anguloMarte = 0;
 
-    anguloMercurio += 360.0 / 88;   // Ajuste para refletir uma órbita completa em 88 "segundos"
+    anguloMercurio += 4.0909 * multVelocidade;  // 360 / 88
     if (anguloMercurio >= 360) anguloMercurio = 0;
 
-    anguloVenus += 360.0 / 225;     // Ajuste para refletir uma órbita completa em 225 "segundos"
+    anguloVenus += 1.6 * multVelocidade;   // 360 / 225
     if (anguloVenus >= 360) anguloVenus = 0;
 
-    anguloJupiter += 360.0 / 4333;  // Ajuste para refletir uma órbita completa em 4333 "segundos"
+    anguloJupiter += 0.0831 * multVelocidade; // 360 / 4333
     if (anguloJupiter >= 360) anguloJupiter = 0;
 
-    anguloSaturno += 360.0 / 10759; // Ajuste para refletir uma órbita completa em 10759 "segundos"
+    anguloSaturno += 0.0335 * multVelocidade; // 360 / 10759 
     if (anguloSaturno >= 360) anguloSaturno = 0;
 
-    anguloUrano += 360.0 / 30660;   // Ajuste para refletir uma órbita completa em 30660 "segundos"
+    anguloUrano += 0.0117* multVelocidade;  // 360 / 30660
     if (anguloUrano >= 360) anguloUrano = 0;
 
-    anguloNetuno += 360.0 / 60180;  // Ajuste para refletir uma órbita completa em 60180 "segundos"
+    anguloNetuno += 0.0060 * multVelocidade;  // 360 / 60180
     if (anguloNetuno >= 360) anguloNetuno = 0;
 
     glutPostRedisplay();
-    glutTimerFunc(33, TimerFunction, 1); // Ajuste o intervalo conforme necessário
+    glutTimerFunc(33, TimerFunction, 1); 
 }
 
 void definirIluminacao() {
