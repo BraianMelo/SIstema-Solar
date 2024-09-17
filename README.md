@@ -45,6 +45,7 @@ O programa recebe comandos das seguintes teclas:
 * **DOWN** ou **ZOOM OUT** (Roda do mouse): diminui o zoom em relação ao sol.
 * **LEFT**: rotaciona pela esquerda ao redor do sol.
 * **RIGHT**: rotaciona pela direita ao redor do sol.
+* **ESC**: fecha o programa.
 
 ## Dono do Projeto
 O projeto foi criado e desenvolvido por:
