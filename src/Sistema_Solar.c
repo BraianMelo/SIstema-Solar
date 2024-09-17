@@ -1,5 +1,7 @@
 #include "../include/Sistema_Solar.h"
 
+bool iluminacaoLigada = true;
+
 // Variáveis globais
 float eyex = 0;
 float eyey = 60;
@@ -9,7 +11,7 @@ float anguloRotacao = 0.0f; // Ângulo de rotação ao redor do eixo Y
 float velocidadeRotacao = 0.05f; // Velocidade da rotação
 float multVelocidade = 1.0f;
 
-void mouseFunc(int button, int state, int x, int y) {
+void gerenciarMouse(int button, int state, int x, int y) {
     static int lastY = 0; // Última posição Y do mouse para detectar rotação
 
     if (state == GLUT_DOWN) {
@@ -29,24 +31,53 @@ void mouseFunc(int button, int state, int x, int y) {
     }
 }
 
-void keyboardFunc(int key, int x, int y) {
-    if (key == GLUT_KEY_LEFT) {
-        anguloRotacao -= velocidadeRotacao; // Rotaciona para a esquerda
-    } else if (key == GLUT_KEY_RIGHT) {
-        anguloRotacao += velocidadeRotacao; // Rotaciona para a direita
-    } else if (key == GLUT_KEY_UP) {
-        eyez -= velocidadeZoom;
-    } else if (key == GLUT_KEY_DOWN) {
-        eyez += velocidadeZoom;
-    } else if (key == GLUT_KEY_F2) {
-        if (multVelocidade <= 32.0f)
-            multVelocidade *= 2;
-    } else if (key == GLUT_KEY_F1) {
-        if (multVelocidade >= 0.25f)
-            multVelocidade /= 2;
+void gerenciarTeclado(unsigned char key, int x, int y) {
+    if (key == 27) // ESC fecha o programa
+		exit(0);
+
+}
+
+void gerenciarTecladoEspecial(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_LEFT:
+            anguloRotacao -= velocidadeRotacao; // Rotaciona para a esquerda
+            break;
+        
+        case GLUT_KEY_RIGHT:
+            anguloRotacao += velocidadeRotacao; // Rotaciona para a direita
+            break;
+        
+        case GLUT_KEY_UP: // Zoom in
+            eyez -= velocidadeZoom;
+            break;
+        
+        case GLUT_KEY_DOWN: // Zoom out
+            eyez += velocidadeZoom;
+            break;
+        
+        case GLUT_KEY_F2: // Aumenta a velocidade
+            if (multVelocidade <= 32.0f) {
+                multVelocidade *= 2;
+            }
+            break;
+        
+        case GLUT_KEY_F1: // Diminui a velocidade
+            if (multVelocidade >= 0.25f) {
+                multVelocidade /= 2;
+            }
+            break;
+        
+        case GLUT_KEY_F3: // Habilita e desabilita a iluminação
+            iluminacaoLigada = !iluminacaoLigada;
+            break;
+        
+        default:
+            break;
     }
     glutPostRedisplay();
 }
+
+
 
 void desenha(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -56,6 +87,15 @@ void desenha(void) {
     // Aplica a rotação e zoom
     gluLookAt(eyex * cos(anguloRotacao) - eyez * sin(anguloRotacao), eyey, eyex * sin(anguloRotacao) + eyez * cos(anguloRotacao), 
               0, 0, 0, 0, 1, 0);
+              
+    if (iluminacaoLigada) {
+        glEnable(GL_LIGHTING);
+        glEnable(GL_LIGHT0);
+        
+    } else {
+        glDisable(GL_LIGHTING);
+        
+    }
 
     // Desenha o sistema planetário
     glPushMatrix();
@@ -182,8 +222,10 @@ void Inicializa() {
     gluPerspective(100, 1, 1, 500);
     glEnable(GL_DEPTH_TEST);
 
-    definirIluminacao();
-    glutMouseFunc(mouseFunc); // Registra a função de callback do mouse
-    glutSpecialFunc(keyboardFunc); // Registra a função de callback do teclado para teclas especiais
-}
+    definirIluminacao(); // Habilita a iluminação
 
+    glutMouseFunc(gerenciarMouse); // Registra a função de callback do mouse
+    glutKeyboardFunc(gerenciarTeclado); // Registra a função de callback para teclas normais
+    glutSpecialFunc(gerenciarTecladoEspecial); // Registra a função de callback para teclas especiais
+    glutTimerFunc(33, TimerFunction, 1); // Registra o timer para atualização
+}

@@ -3,7 +3,13 @@
 
 #include <GL/glut.h>
 #include <math.h>
+#include <stdio.h>
+#include <stdbool.h>
+
 #include "../include/Planetas.h"
+
+// Variáveis locais
+extern bool iluminacaoLigada;
 
 // Variáveis globais
 extern float eyex;
@@ -17,8 +23,9 @@ extern float multVelocidade;
 
 // Declarações de funções
 void desenha();
-void keyboardFunc(int key, int x, int y);
-void mouseFunc(int button, int state, int x, int y);
+void gerenciarTeclado(unsigned char key, int x, int y);
+void gerenciarTecladoEspecial(int key, int x, int y);
+void gerenciarMouse(int button, int state, int x, int y);
 void TimerFunction(int value);
 void definirIluminacao();
 void Inicializa();
