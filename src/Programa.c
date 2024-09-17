@@ -14,5 +14,6 @@ int main(int argc, char **argv) {
     glutTimerFunc(33, TimerFunction, 1);
 
     glutMainLoop();
+    
     return 0;
 }
