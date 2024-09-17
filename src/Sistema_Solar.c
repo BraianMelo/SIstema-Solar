@@ -38,16 +38,15 @@ void keyboardFunc(int key, int x, int y) {
         eyez -= velocidadeZoom;
     } else if (key == GLUT_KEY_DOWN) {
         eyez += velocidadeZoom;
-    } else if (key == GLUT_KEY_F1) {
+    } else if (key == GLUT_KEY_F2) {
         if (multVelocidade <= 32.0f)
             multVelocidade *= 2;
-    } else if (key == GLUT_KEY_F2) {
+    } else if (key == GLUT_KEY_F1) {
         if (multVelocidade >= 0.25f)
             multVelocidade /= 2;
     }
     glutPostRedisplay();
 }
-
 
 void desenha(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
